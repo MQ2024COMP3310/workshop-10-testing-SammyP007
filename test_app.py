@@ -35,8 +35,12 @@ class TestWebApp(unittest.TestCase):
         assert response.status_code == 200
 
     def test_no_access_to_profile(self):
-        # TODO: Check that non-logged-in user should be redirected to /login
-        assert False
+            response = self.client.get('/profile', follow_redirects=False)
+            assert response.status_code == 302
+            assert response.headers['Location'] == '/login'
+            response = self.client.get('/profile', follow_redirects=True)
+            assert response.status_code == 200
+            assert b'Please log in to access this page.' in response.data
 
     def test_register_user(self):
         response = self.client.post('/signup', data = {
@@ -80,7 +84,7 @@ class TestWebApp(unittest.TestCase):
         assert response.status_code == 200 
 
     def test_xss_vulnerability(self):
-        # TODO: Can we store javascript tags in the username field?
+        
         assert False
 
 
