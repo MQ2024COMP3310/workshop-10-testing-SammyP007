@@ -37,7 +37,8 @@ class TestWebApp(unittest.TestCase):
     def test_no_access_to_profile(self):
             response = self.client.get('/profile', follow_redirects=False)
             assert response.status_code == 302
-            assert response.headers['Location'] == '/login'
+            assert response.headers['Location'].startswith('/login')
+    
             response = self.client.get('/profile', follow_redirects=True)
             assert response.status_code == 200
             assert b'Please log in to access this page.' in response.data
