@@ -71,7 +71,6 @@ class TestWebApp(unittest.TestCase):
         assert response.status_code == 200
         # should redirect to the login page
         assert response.request.path == '/login'
-
         user = User.query.filter_by(email='user@test.com').first()
         assert user is not None
         assert check_password_hash(user.password, 'test123')
@@ -82,7 +81,8 @@ class TestWebApp(unittest.TestCase):
             'name' : 'test user',
             'password' : 'test123'
         }, follow_redirects = True)
-        assert response.status_code == 200 
+        assert response.status_code == 400 
+        assert b'SQL syntax error' in response.data
 
     def test_xss_vulnerability(self):
         
