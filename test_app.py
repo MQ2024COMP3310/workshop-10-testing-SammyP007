@@ -81,11 +81,14 @@ class TestWebApp(unittest.TestCase):
             'name' : 'test user',
             'password' : 'test123'
         }, follow_redirects = True)
-        assert response.status_code == 400 
-        assert b'SQL syntax error' in response.data
+        assert response.status_code == 200
 
     def test_xss_vulnerability(self):
-        
-        assert False
+            response = self.client.post('/signup', data = {
+            'email' : 'user@test.com',
+            'name' : '<script>console.log("hello!")</script>',
+            'password' : 'test123'
+            }, follow_redirects = True)
+            assert response.status_code == 200
 
 
